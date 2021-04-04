@@ -50,7 +50,7 @@ public class AnswerService {
         Answer selectedAnswer = findById(answerId);
 
         ValidUtils.authenticateOfId(loginUser.getUserId(), selectedAnswer.getReplyId());
-        if (!selectedAnswer.isDeleted()) {   // soft delete
+        if (!selectedAnswer.isAnswerDeleted()) {   // soft delete
             selectedAnswer.setAnswerDeleted(true);
         }
         save(session, selectedAnswer); // soft delete

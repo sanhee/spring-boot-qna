@@ -21,6 +21,7 @@ public class Question {
     private User writer;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL) // JPA 에노테이션: Q-A관계 맵핑, question은 Answer 클래스가 ManyToOne으로 맺은 칼럼의 이름
+    @OrderBy("answerId DESC")
     private List<Answer> answers;
 
     @Column(nullable = false, length = 20)
@@ -58,7 +59,7 @@ public class Question {
         List<Answer> enableAnswers = new ArrayList<>();
 
         for(Answer answer : answers){
-            if(!answer.isDeleted()){
+            if(!answer.isAnswerDeleted()){
                 enableAnswers.add(answer);
             }
         }

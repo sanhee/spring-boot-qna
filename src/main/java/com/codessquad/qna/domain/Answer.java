@@ -2,6 +2,7 @@ package com.codessquad.qna.domain;
 
 import com.codessquad.qna.utils.ValidUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty
     private Long answerId;
 
     @ManyToOne
@@ -25,25 +27,29 @@ public class Answer {
     private Question question;
 
     @Column(nullable = false, length = 20)
+    @JsonProperty
     private String replyId;
 
     @Column(nullable = false, length = 20)
+    @JsonProperty
     private String replyAuthor;
 
     @Column(nullable = false, length = 500)
+    @JsonProperty
     private String replyContents;
 
     @Column(nullable = false, length = 20)
     private final LocalDateTime replyTime = LocalDateTime.now();
 
     @Column(nullable = false)
+    @JsonIgnore
     private boolean answerDeleted = false;
 
     public Long getAnswerId() {
         return answerId;
     }
 
-    public String getTime() {
+    public String getReplyTime() {
         return replyTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
@@ -63,7 +69,7 @@ public class Answer {
         return replyContents;
     }
 
-    public boolean isDeleted() {
+    public boolean isAnswerDeleted() {
         return answerDeleted;
     }
 

@@ -29,4 +29,18 @@ function onSuccess(data, status){
     // org.springframework.boot:spring-boot-starter-web 에 포함된 내장 라이브러리
     // data : RestController를 통해 Json으로 리턴한 데이터 ( Answer 클래스 안의 Getter 멤버 )
     console.log(data);
+    var answerTemplate = $("#answerTemplate").html();
+    var template = answerTemplate.format(data.replyAuthor, data.replyTime, data.replyContents, data.answerId, data.answerId);
+    $(".qna-comment-slipp-articles").prepend(template);
+    $(".answer-write textarea").val("");
 }
+
+String.prototype.format = function() {
+  var args = arguments;
+  return this.replace(/{(\d+)}/g, function(match, number) {
+    return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+        ;
+  });
+};
