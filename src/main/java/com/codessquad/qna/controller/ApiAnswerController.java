@@ -5,7 +5,6 @@ import com.codessquad.qna.domain.Question;
 import com.codessquad.qna.service.AnswerService;
 import com.codessquad.qna.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,31 +15,32 @@ import javax.servlet.http.HttpSession;
  * Blog : https://velog.io/@san
  * Github : https://github.com/sanhee
  */
-@Controller
-public class AnswerController {
+@RestController
+@RequestMapping("/api/questions/{question.id}/answers")
+public class ApiAnswerController {
 
     private final AnswerService answerService;
     private final QuestionService questionService;
 
     @Autowired
-    public AnswerController(AnswerService answerService, QuestionService questionService) {
+    public ApiAnswerController(AnswerService answerService, QuestionService questionService) {
         this.answerService = answerService;
         this.questionService = questionService;
     }
 
-    @PostMapping("/questions/{question.id}/answers")
-    public String createAnswer(Answer answer, HttpSession session) {
-        answerService.save(session, answer);
-        return "redirect:/questions/{question.id}";
+    @PostMapping("") // 댓글작성하고 버튼 눌렀을 때
+    public Answer createAnswer(Answer answer, HttpSession session) {
+        answer = answerService.save(session, answer);
+        return answer;
     }
 
-    @DeleteMapping("/questions/{question.id}/answers/{answerId}")
+    @DeleteMapping("{answerId}")
     public String deleteAnswer(HttpSession session, @PathVariable Long answerId) {
         answerService.delete(session, answerId);
         return "redirect:/questions/{question.id}";
     }
 
-    @GetMapping("/questions/{question.id}/answers/{answerId}/update")
+    @GetMapping("{answerId}/update")
     public String modifyAnswerButton(@PathVariable("question.id") Long targetId, @PathVariable Long answerId, Model model) {
         Question questionData = questionService.findById(targetId);
         Answer selectedAnswer = answerService.getSelectedAnswers(questionData, answerId);
@@ -50,7 +50,7 @@ public class AnswerController {
         return "qna/updateShow";
     }
 
-    @PutMapping("/questions/{question.id}/answers/{answerId}")
+    @PutMapping("{answerId}")
     public String updateAnswer(HttpSession session, @PathVariable("answerId") Long id, String replyContents) {
         answerService.update(session, id, replyContents);
         return "redirect:/questions/{question.id}";

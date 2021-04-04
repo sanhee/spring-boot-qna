@@ -82,7 +82,7 @@
                                 </div>
                             </article>
                             {{/answer}}
-                                <form class="submit-write" method="post" action="/questions/{{question.id}}/answers">
+                                <form class="answer-write" method="post" action="/api/questions/{{question.id}}/answers">
                                 <div class="form-group" style="padding:14px;">
                                     <textarea class="form-control" name = "replyContents" placeholder="답글을 작성해주세요."></textarea>
                                 </div>
@@ -90,7 +90,7 @@
                                 <button class="btn btn-success pull-right" type="button" disabled>🚫 로그인후 작성가능합니다.</button>
                                 {{/sessionedUser}}
                                 {{#sessionedUser}}
-                                <button type = "submit" class="btn btn-success pull-right" >답변하기</button>
+                                <input type = "submit" class="btn btn-success pull-right" value = "답변하기"/>
                                 {{/sessionedUser}}
                                 <div class="clearfix"/>
                             </form>

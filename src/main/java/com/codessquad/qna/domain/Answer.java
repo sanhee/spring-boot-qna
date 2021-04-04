@@ -1,6 +1,7 @@
 package com.codessquad.qna.domain;
 
 import com.codessquad.qna.utils.ValidUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_question"))
+    @JsonIgnore
     private Question question;
 
     @Column(nullable = false, length = 20)

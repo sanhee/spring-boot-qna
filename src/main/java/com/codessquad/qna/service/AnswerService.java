@@ -28,14 +28,14 @@ public class AnswerService {
         this.answerRepository = answerRepository;
     }
 
-    public void save(HttpSession session, Answer answer) {
+    public Answer save(HttpSession session, Answer answer) {
         HttpSessionUtils.checkValidOf(session);
         answer = Optional.ofNullable(answer).orElseThrow(IllegalArgumentException::new);
 
         User findUser = HttpSessionUtils.getLoginUserOf(session);
         answer.setReplyId(findUser.getUserId());
         answer.setReplyAuthor(findUser.getName());
-        answerRepository.save(answer);
+        return answerRepository.save(answer);
     }
 
     public Answer findById(Long id) {
