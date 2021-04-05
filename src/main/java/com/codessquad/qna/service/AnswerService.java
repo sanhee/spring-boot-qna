@@ -28,13 +28,16 @@ public class AnswerService {
         this.answerRepository = answerRepository;
     }
 
-    public Answer save(HttpSession session, Answer answer) {
+    public Answer save(HttpSession session, Question question, Answer answer) {
         HttpSessionUtils.checkValidOf(session);
         answer = Optional.ofNullable(answer).orElseThrow(IllegalArgumentException::new);
 
         User findUser = HttpSessionUtils.getLoginUserOf(session);
+        answer.setQuestion(question); // OnetToMany를 해줬는데, 이렇게 하는게 맞을까?
         answer.setReplyId(findUser.getUserId());
         answer.setReplyAuthor(findUser.getName());
+
+        question.addCountOfAnswer();
         return answerRepository.save(answer);
     }
 
@@ -42,18 +45,18 @@ public class AnswerService {
         return answerRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
-    public void delete(HttpSession session, Long answerId) {
-        ValidUtils.checkIllegalArgumentOf(answerId);
+    public Answer delete(HttpSession session, Answer answer) {
+        answer = Optional.ofNullable(answer).orElseThrow(IllegalArgumentException::new);
         HttpSessionUtils.checkValidOf(session);
 
         User loginUser = HttpSessionUtils.getLoginUserOf(session);
-        Answer selectedAnswer = findById(answerId);
 
-        ValidUtils.authenticateOfId(loginUser.getUserId(), selectedAnswer.getReplyId());
-        if (!selectedAnswer.isAnswerDeleted()) {   // soft delete
-            selectedAnswer.setAnswerDeleted(true);
+        ValidUtils.authenticateOfId(loginUser.getUserId(), answer.getReplyId());
+        if (!answer.isAnswerDeleted()) {   // soft delete
+            answer.setAnswerDeleted(true);
         }
-        save(session, selectedAnswer); // soft delete
+        answer.getQuestion().minusCountOfAnswer(); // count -1
+        return save(session, answer.getQuestion(), answer); // soft delete
     }
 
     public Answer getSelectedAnswers(Question questionData, Long answerId) {
@@ -73,6 +76,10 @@ public class AnswerService {
         Answer selectedAnswer = findById(id);
         ValidUtils.authenticateOfId(loginUser.getUserId(), selectedAnswer.getReplyId());
         selectedAnswer.setReplyContents(replyContents);
-        save(session, selectedAnswer);
+        save(session, selectedAnswer.getQuestion(), selectedAnswer);
+    }
+
+    public void addCountOfAnswer(Question question) {
+        question.addCountOfAnswer();
     }
 }

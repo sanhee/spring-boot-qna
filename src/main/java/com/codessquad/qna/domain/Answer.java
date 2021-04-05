@@ -23,7 +23,7 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_to_question"))
-    @JsonIgnore
+    @JsonProperty
     private Question question;
 
     @Column(nullable = false, length = 20)

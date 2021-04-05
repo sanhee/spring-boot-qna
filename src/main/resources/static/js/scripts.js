@@ -30,9 +30,30 @@ function onSuccess(data, status){
     // data : RestController를 통해 Json으로 리턴한 데이터 ( Answer 클래스 안의 Getter 멤버 )
     console.log(data);
     var answerTemplate = $("#answerTemplate").html();
-    var template = answerTemplate.format(data.replyAuthor, data.replyTime, data.replyContents, data.answerId, data.answerId);
+    var template = answerTemplate.format(data.replyAuthor, data.replyTime, data.replyContents, data.question.id, data.answerId);
     $(".qna-comment-slipp-articles").prepend(template);
     $(".answer-write textarea").val("");
+}
+
+$("a.link-delete-article").click(deleteAnswer);
+
+function deleteAnswer(e){
+    e.preventDefault();
+
+    var url = $(this).attr("href");
+    console.log(url);
+
+    $.ajax({
+        type : 'delete',
+        url : url,
+        dataType : 'json',
+        error : function (xhr, status){
+            console.log("error");
+        },
+        success : function(data,status){
+            console.log(data);
+        }
+    });
 }
 
 String.prototype.format = function() {

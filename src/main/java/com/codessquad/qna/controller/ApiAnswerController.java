@@ -29,15 +29,15 @@ public class ApiAnswerController {
     }
 
     @PostMapping("") // 댓글작성하고 버튼 눌렀을 때
-    public Answer createAnswer(Answer answer, HttpSession session) {
-        answer = answerService.save(session, answer);
-        return answer;
+    public Answer createAnswer(Answer answer, @PathVariable("question.id") Long questionId, HttpSession session) {
+        Question question = questionService.findById(questionId);
+        return answerService.save(session, question, answer);
     }
 
     @DeleteMapping("{answerId}")
-    public String deleteAnswer(HttpSession session, @PathVariable Long answerId) {
-        answerService.delete(session, answerId);
-        return "redirect:/questions/{question.id}";
+    public Answer deleteAnswer(HttpSession session, @PathVariable Long answerId) {
+        Answer answer = answerService.findById(answerId);
+        return answerService.delete(session, answer);
     }
 
     @GetMapping("{answerId}/update")

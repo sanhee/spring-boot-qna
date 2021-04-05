@@ -43,7 +43,7 @@ public class QuestionService {
         ValidUtils.checkIllegalArgumentOf(id);
         Question q = questionRepository.findById(id).orElseThrow(NotFoundException::new);
 
-        if (!q.isDeleted()) {
+        if (!q.isQuestionDeleted()) {
             return q;
         }
         throw new NotFoundException();
@@ -53,7 +53,7 @@ public class QuestionService {
         Iterable<Question> questions = questionRepository.findAll();
         List<Question> enableQuestions = new ArrayList<>();
         for (Question question : questions) {
-            if(!question.isDeleted()) {
+            if(!question.isQuestionDeleted()) {
                 enableQuestions.add(question);
             }
         }
@@ -66,7 +66,7 @@ public class QuestionService {
         if (findQuestion.getAnswers().size() > 0) { // 답글있으면 삭제불가
             throw new NotDeleteException();
         }
-        if (!findQuestion.isDeleted()) {
+        if (!findQuestion.isQuestionDeleted()) {
             findQuestion.setDeleted(true);
         }
         questionRepository.save(findQuestion); // soft delete

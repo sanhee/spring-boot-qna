@@ -1,6 +1,7 @@
 package com.codessquad.qna.domain;
 
 import com.codessquad.qna.utils.ValidUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -15,8 +16,11 @@ public class User {
     private String userId;
 
     @Column(nullable = false, length = 20)
+    @JsonIgnore
     private String password;
 
+    @Column(nullable = false, length = 20)
+    @JsonIgnore
     private String newPassword;
 
     @Column(nullable = false, length = 20)
